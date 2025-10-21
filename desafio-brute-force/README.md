@@ -18,6 +18,22 @@ Este projeto prático visa explorar os mecanismos por trás dos ataques de forç
 - Reconhecer vulnerabilidades comuns e propor medidas de mitigação.
 - Utilizar o GitHub como portfólio técnico para compartilhar documentação e evidências.
 
+### 📊 Resultados dos Ataques
+
+**🎯 TODOS OS ATAQUES FORAM BEM-SUCEDIDOS!**
+
+Os ataques de força bruta realizados descobriram credenciais válidas em **todos os serviços testados** em menos de 40 segundos. Para ver os resultados detalhados, incluindo credenciais descobertas, outputs das ferramentas e análise de vulnerabilidades, acesse:
+
+**👉 [RESULTADOS COMPLETOS DOS ATAQUES](docs/RESULTADOS_ATAQUES.md)**
+
+**Resumo Rápido:**
+- ✅ **FTP**: 2 credenciais descobertas (msfadmin:msfadmin, ftp:ftp)
+- ✅ **SSH**: 2 credenciais descobertas (msfadmin:msfadmin, user:user)
+- ✅ **SMB**: 1 credencial descoberta (msfadmin:msfadmin)
+- ✅ **Web (DVWA)**: 1 credencial descoberta (admin:password)
+- ⏱️ **Tempo médio**: 15-35 segundos por serviço
+- 🎯 **Taxa de sucesso**: 100%
+
 ---
 
 
